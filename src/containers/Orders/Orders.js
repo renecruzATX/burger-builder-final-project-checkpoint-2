@@ -9,19 +9,36 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 //renders past orders on the Orders page
 class Orders extends Component {
+    state = {
+        show: true
+    };
+
     //initializes the orders from the server
     componentDidMount () {
         this.props.onFetchOrders(this.props.token);
+    }
+
+    orderDetailsHandler () {
+        console.log('this is working again');
+    }
+
+    orderDeleteHandler () {
+        console.log('this delete is working');
     }
 
     render () {
         let orders = <Spinner/>;
             if (!this.props.loading) {
                 orders = this.props.orders.map(order =>(
-                    <Order 
-                    key={order.id}
-                    ingredients={order.order.ingredients}
-                    price = {+order.order.price}/>
+                    <div>
+                        <Order 
+                        key={order.id}
+                        ingredients={order.order.ingredients}
+                        price = {+order.order.price}
+                        orderDetails={this.orderDetailsHandler}
+                        orderDelete={this.orderDeleteHandler}/>
+                        
+                    </div>
                 ))
             };
         return (
