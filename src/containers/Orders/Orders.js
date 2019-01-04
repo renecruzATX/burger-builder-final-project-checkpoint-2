@@ -6,11 +6,12 @@ import Order from '../../components/Order/Order';
 //import withErrorHandler from '../../hoc/withErrorHander/withErrorHandler';
 import * as actions from '../../store/actions/index';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import Modal from '../../components/UI/Modal/Modal';
 
 //renders past orders on the Orders page
 class Orders extends Component {
     state = {
-        show: true
+        show: false, 
     };
 
     //initializes the orders from the server
@@ -18,15 +19,23 @@ class Orders extends Component {
         this.props.onFetchOrders(this.props.token);
     }
 
-    orderDetailsHandler () {
-        console.log('this is working again');
+    orderDetailsHandler = (order) => {
+        console.log(Object.entries(order.order));
+        this.props.onSetOrderId(JSON.stringify(order.order, null, '\t'));
+        this.setState({show:true});       
     }
 
-    orderDeleteHandler () {
-        console.log('this delete is working');
+    orderDeleteHandler (order) {
+        console.log(Object.entries(this.props.orders['0'].order));       
+    }
+
+    closeModalHandler = () => {
+        this.setState({show: false});
+        this.props.onSetOrderId(null);
     }
 
     render () {
+        let orderDeets = this.props.orderId;
         let orders = <Spinner/>;
             if (!this.props.loading) {
                 orders = this.props.orders.map(order =>(
@@ -35,14 +44,16 @@ class Orders extends Component {
                         key={order.id}
                         ingredients={order.order.ingredients}
                         price = {+order.order.price}
-                        orderDetails={this.orderDetailsHandler}
-                        orderDelete={this.orderDeleteHandler}/>
-                        
+                        orderDetails={()=>this.orderDetailsHandler(order)}
+                        orderDelete={()=>this.orderDeleteHandler(order)}/>                        
                     </div>
                 ))
-            };
+            };        
         return (
             <div>
+                <Modal show={this.state.show} modalClosed={this.closeModalHandler}>
+                    <p>{orderDeets}</p>
+                </Modal>
                 {orders}
             </div>
         );
@@ -53,13 +64,15 @@ const mapStateToProps = state => {
     return {
         orders: state.order.orders,
         loading: state.order.loading,
-        token: state.auth.token
+        token: state.auth.token,
+        orderId: state.order.orderId
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchOrders: (token) => dispatch(actions.fetchOrders(token))
+        onFetchOrders: (token) => dispatch(actions.fetchOrders(token)),
+        onSetOrderId: (orderId) => dispatch(actions.setOrderId(orderId)),
     };
 };
 

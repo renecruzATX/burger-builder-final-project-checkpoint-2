@@ -55,7 +55,7 @@ export const fetchOrdersFail = (error) => {
     return {
         type: actionTypes.FETCH_ORDERS_FAIL,
         error: error
-    }
+    };
 };
 
 export const fetchOrdersStart = () => {
@@ -81,5 +81,12 @@ export const fetchOrders = (token) => {
             .catch(err => {
                 dispatch(fetchOrdersFail(err));
             });
-    }
+    };
+};
+
+export const setOrderId = (orderId) => {
+    return {
+        type: actionTypes.SET_ORDER_ID,
+        orderId: orderId
+    };
 };
