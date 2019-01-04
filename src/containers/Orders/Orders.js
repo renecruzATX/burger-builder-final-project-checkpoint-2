@@ -7,6 +7,7 @@ import Order from '../../components/Order/Order';
 import * as actions from '../../store/actions/index';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Modal from '../../components/UI/Modal/Modal';
+import OrderDeets from '../../components/Order/OrderDeets/OrderDeets';
 
 //renders past orders on the Orders page
 class Orders extends Component {
@@ -19,9 +20,9 @@ class Orders extends Component {
         this.props.onFetchOrders(this.props.token);
     }
 
+    //sets the order props so a modal can be shown of the order details
     orderDetailsHandler = (order) => {
-        console.log(Object.entries(order.order));
-        this.props.onSetOrderId(JSON.stringify(order.order, null, '\t'));
+        this.props.onSetOrderId(order.order);
         this.setState({show:true});       
     }
 
@@ -31,28 +32,32 @@ class Orders extends Component {
 
     closeModalHandler = () => {
         this.setState({show: false});
-        this.props.onSetOrderId(null);
+        this.props.onSetOrderId(0);
     }
 
     render () {
-        let orderDeets = this.props.orderId;
+        let orderDeets = null;
+        if (this.props.orderId) {
+            orderDeets = <OrderDeets order={this.props.orderId}/>
+        }
         let orders = <Spinner/>;
-            if (!this.props.loading) {
-                orders = this.props.orders.map(order =>(
-                    <div>
-                        <Order 
-                        key={order.id}
-                        ingredients={order.order.ingredients}
-                        price = {+order.order.price}
-                        orderDetails={()=>this.orderDetailsHandler(order)}
-                        orderDelete={()=>this.orderDeleteHandler(order)}/>                        
-                    </div>
-                ))
-            };        
+        if (!this.props.loading) {
+            orders = this.props.orders.map(order =>(
+                <div>
+                    <Order 
+                    key={order.id}
+                    ingredients={order.order.ingredients}
+                    price = {+order.order.price}
+                    orderDetails={()=>this.orderDetailsHandler(order)}
+                    orderDelete={()=>this.orderDeleteHandler(order)}/>                        
+                </div>
+            ))
+        };
+
         return (
             <div>
                 <Modal show={this.state.show} modalClosed={this.closeModalHandler}>
-                    <p>{orderDeets}</p>
+                    {orderDeets}
                 </Modal>
                 {orders}
             </div>

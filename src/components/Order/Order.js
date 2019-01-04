@@ -30,8 +30,12 @@ const order = (props) => {
         <div className={styles.Order}>
             <p>Ingredients: {ingredientOutput}</p>
             <p>Price: <strong>${props.price.toFixed(2)}</strong></p>
-            <Button clicked={props.orderDetails} btnType='Success'>Order Details</Button>
-            <Button clicked={props.orderDelete} btnType='Danger'>Delete Order</Button>
+            <Button 
+                clicked={props.orderDetails} 
+                btnType='Success'>Order Details</Button>
+            <Button 
+                clicked={props.orderDelete} 
+                btnType='Danger'>Delete Order</Button>
         </div>            
     );
     
