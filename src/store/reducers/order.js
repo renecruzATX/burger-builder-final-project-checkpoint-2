@@ -6,7 +6,8 @@ const initialState = {
     orders: [],
     loading: false,
     purchased: false, 
-    orderId: 0
+    orderId: 0,
+    confDelete: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -57,6 +58,11 @@ const reducer = (state = initialState, action) => {
             return{
                 ...state,
                 orderId: action.orderId
+            }
+        case actionTypes.CONFIRM_DELETE:
+            return{
+                ...state,
+                confDelete: action.confDelete
             }
         default:
             return state;

@@ -90,3 +90,10 @@ export const setOrderId = (orderId) => {
         orderId: orderId
     };
 };
+
+export const confirmDelete = (confDelete) => {
+    return {
+        type: actionTypes.CONFIRM_DELETE,
+        confDelete: confDelete
+    };
+};

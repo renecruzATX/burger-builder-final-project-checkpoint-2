@@ -9,7 +9,8 @@ export {
     purchaseBurger,
     purchaseInit,
     fetchOrders,
-    setOrderId
+    setOrderId,
+    confirmDelete
 } from './order';
 export {
     auth,

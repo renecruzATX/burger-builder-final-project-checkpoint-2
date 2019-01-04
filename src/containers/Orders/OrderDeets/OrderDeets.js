@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './OrderDeets.module.css';
 
 const OrderDeets = (props) => (
-    <div className={styles.Font}>        
+    <div className={styles.Font}>             
         <strong>Ingredients:</strong>
           <p className={styles.Line}>Lettuce: {props.order.ingredients.lettuce}</p>
           <p className={styles.Line}>Bacon: {props.order.ingredients.bacon}</p>

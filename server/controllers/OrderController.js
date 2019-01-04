@@ -9,8 +9,8 @@ module.exports.list = function list(req, res) {
 }
 module.exports.show = function show(req, res) {
     OrderModel.findById(req.params.id).exec()
-        .then((orders) => {
-            return res.json(orders);
+        .then((order) => {
+            return res.json(order);
         });
 }
 module.exports.create = function create(req, res) {
@@ -18,4 +18,8 @@ module.exports.create = function create(req, res) {
     order.save().then(newOrder => {
         res.json(newOrder);
     });
+}
+module.exports.remove = function remove(req, res) {
+    OrderModel.findByIdAndDelete(req.params.id).exec()
+        .then(res.json('Deleted'));
 }
