@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import Order from '../../components/Order/Order';
-//import axios from 'axios';
+import axios from 'axios';
 //import withErrorHandler from '../../hoc/withErrorHander/withErrorHandler';
 import * as actions from '../../store/actions/index';
 import Spinner from '../../components/UI/Spinner/Spinner';
@@ -13,7 +13,8 @@ import ConfirmDelete from '../../containers/Orders/ConfirmDelete/ConfirmDelete';
 //renders past orders on the Orders page
 class Orders extends Component {
     state = {
-        show: false, 
+        show: false,
+        deleted: null
     };
 
     //initializes the orders from the server
@@ -27,25 +28,34 @@ class Orders extends Component {
         this.setState({show:true});       
     }
 
+    //Sets conditions for a Modal to pop up confirming the deletion of an order
     confirmDeleteHandler (order) {
-        console.log(order._id);
+        this.props.onSetOrderId(order._id);
         this.props.onConfirmDelete(true);
-        this.setState({show:true});       
+        this.setState({show:true, deleted: null});       
     }
 
+    //deletes the selected order
     deletOrderHandler () {
-        console.log('This is working');
+        axios.delete('/orders/' + this.props.orderId)
+                .then(response => {
+                    this.setState({
+                        deleted: response.data                        
+                    })
+                })
+                .catch(error => error);                  
     }
 
+    //closes any modals and resets all states related to the orders
     closeModalHandler = () => {
         this.props.onConfirmDelete(false);
-        this.setState({show: false});
+        this.setState({show: false, deleted: null});
         this.props.onSetOrderId(0);
     }
 
     render () {
         let orderDeets = null;
-        if (this.props.orderId) {
+        if (this.props.orderId && !this.props.confDelete) {
             orderDeets = <OrderDeets order={this.props.orderId}/>
         }
 
@@ -57,7 +67,7 @@ class Orders extends Component {
         let orders = <Spinner/>;
         if (!this.props.loading) {
             orders = this.props.orders.map(order =>(
-                <div>
+                <div key={(order.id * 7)}>
                     <Order 
                     key={order.id}
                     ingredients={order.order.ingredients}
@@ -67,6 +77,12 @@ class Orders extends Component {
                 </div>
             ))
         };
+
+        if (this.state.deleted) {
+            window.alert('Order Deleted!!!!');
+            this.closeModalHandler();        
+            this.props.onFetchOrders(this.props.token);
+        };  
 
         return (
             <div>
